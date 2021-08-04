@@ -7,6 +7,7 @@ import (
 	aggregates_ohlcv_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_ohlcv_v1"
 	aggregates_spot_exchange_rate_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v1"
 	aggregates_vwap_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_vwap_v1"
+	market_update_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/market_update_v1"
 	trades_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/trades_v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -475,6 +476,122 @@ var StreamAggregatesVWAPServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamAggregatesVWAPServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+// StreamMarketUpdateServiceV1Client is the client API for StreamMarketUpdateServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamMarketUpdateServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *market_update_v1.StreamMarketUpdateRequestV1, opts ...grpc.CallOption) (StreamMarketUpdateServiceV1_SubscribeClient, error)
+}
+
+type streamMarketUpdateServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamMarketUpdateServiceV1Client(cc grpc.ClientConnInterface) StreamMarketUpdateServiceV1Client {
+	return &streamMarketUpdateServiceV1Client{cc}
+}
+
+func (c *streamMarketUpdateServiceV1Client) Subscribe(ctx context.Context, in *market_update_v1.StreamMarketUpdateRequestV1, opts ...grpc.CallOption) (StreamMarketUpdateServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamMarketUpdateServiceV1_ServiceDesc.Streams[0], "/kaikosdk.StreamMarketUpdateServiceV1/Subscribe", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamMarketUpdateServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamMarketUpdateServiceV1_SubscribeClient interface {
+	Recv() (*market_update_v1.StreamMarketUpdateResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamMarketUpdateServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamMarketUpdateServiceV1SubscribeClient) Recv() (*market_update_v1.StreamMarketUpdateResponseV1, error) {
+	m := new(market_update_v1.StreamMarketUpdateResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamMarketUpdateServiceV1Server is the server API for StreamMarketUpdateServiceV1 service.
+// All implementations must embed UnimplementedStreamMarketUpdateServiceV1Server
+// for forward compatibility
+type StreamMarketUpdateServiceV1Server interface {
+	// Subscribe
+	Subscribe(*market_update_v1.StreamMarketUpdateRequestV1, StreamMarketUpdateServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamMarketUpdateServiceV1Server()
+}
+
+// UnimplementedStreamMarketUpdateServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamMarketUpdateServiceV1Server struct {
+}
+
+func (UnimplementedStreamMarketUpdateServiceV1Server) Subscribe(*market_update_v1.StreamMarketUpdateRequestV1, StreamMarketUpdateServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamMarketUpdateServiceV1Server) mustEmbedUnimplementedStreamMarketUpdateServiceV1Server() {
+}
+
+// UnsafeStreamMarketUpdateServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamMarketUpdateServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamMarketUpdateServiceV1Server interface {
+	mustEmbedUnimplementedStreamMarketUpdateServiceV1Server()
+}
+
+func RegisterStreamMarketUpdateServiceV1Server(s grpc.ServiceRegistrar, srv StreamMarketUpdateServiceV1Server) {
+	s.RegisterService(&StreamMarketUpdateServiceV1_ServiceDesc, srv)
+}
+
+func _StreamMarketUpdateServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(market_update_v1.StreamMarketUpdateRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamMarketUpdateServiceV1Server).Subscribe(m, &streamMarketUpdateServiceV1SubscribeServer{stream})
+}
+
+type StreamMarketUpdateServiceV1_SubscribeServer interface {
+	Send(*market_update_v1.StreamMarketUpdateResponseV1) error
+	grpc.ServerStream
+}
+
+type streamMarketUpdateServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamMarketUpdateServiceV1SubscribeServer) Send(m *market_update_v1.StreamMarketUpdateResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamMarketUpdateServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamMarketUpdateServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamMarketUpdateServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamMarketUpdateServiceV1",
+	HandlerType: (*StreamMarketUpdateServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamMarketUpdateServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
