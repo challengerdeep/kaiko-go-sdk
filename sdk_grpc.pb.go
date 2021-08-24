@@ -4,6 +4,7 @@ package kaikosdk
 
 import (
 	context "context"
+	aggregates_direct_exchange_rate_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_direct_exchange_rate_v1"
 	aggregates_ohlcv_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_ohlcv_v1"
 	aggregates_spot_exchange_rate_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v1"
 	aggregates_vwap_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_vwap_v1"
@@ -245,6 +246,122 @@ var StreamAggregatesSpotExchangeRateServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamAggregatesSpotExchangeRateServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+// StreamAggregatesDirectExchangeRateServiceV1Client is the client API for StreamAggregatesDirectExchangeRateServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamAggregatesDirectExchangeRateServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateRequestV1, opts ...grpc.CallOption) (StreamAggregatesDirectExchangeRateServiceV1_SubscribeClient, error)
+}
+
+type streamAggregatesDirectExchangeRateServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamAggregatesDirectExchangeRateServiceV1Client(cc grpc.ClientConnInterface) StreamAggregatesDirectExchangeRateServiceV1Client {
+	return &streamAggregatesDirectExchangeRateServiceV1Client{cc}
+}
+
+func (c *streamAggregatesDirectExchangeRateServiceV1Client) Subscribe(ctx context.Context, in *aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateRequestV1, opts ...grpc.CallOption) (StreamAggregatesDirectExchangeRateServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamAggregatesDirectExchangeRateServiceV1_ServiceDesc.Streams[0], "/kaikosdk.StreamAggregatesDirectExchangeRateServiceV1/Subscribe", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamAggregatesDirectExchangeRateServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamAggregatesDirectExchangeRateServiceV1_SubscribeClient interface {
+	Recv() (*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamAggregatesDirectExchangeRateServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamAggregatesDirectExchangeRateServiceV1SubscribeClient) Recv() (*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateResponseV1, error) {
+	m := new(aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamAggregatesDirectExchangeRateServiceV1Server is the server API for StreamAggregatesDirectExchangeRateServiceV1 service.
+// All implementations must embed UnimplementedStreamAggregatesDirectExchangeRateServiceV1Server
+// for forward compatibility
+type StreamAggregatesDirectExchangeRateServiceV1Server interface {
+	// Subscribe
+	Subscribe(*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateRequestV1, StreamAggregatesDirectExchangeRateServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamAggregatesDirectExchangeRateServiceV1Server()
+}
+
+// UnimplementedStreamAggregatesDirectExchangeRateServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamAggregatesDirectExchangeRateServiceV1Server struct {
+}
+
+func (UnimplementedStreamAggregatesDirectExchangeRateServiceV1Server) Subscribe(*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateRequestV1, StreamAggregatesDirectExchangeRateServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamAggregatesDirectExchangeRateServiceV1Server) mustEmbedUnimplementedStreamAggregatesDirectExchangeRateServiceV1Server() {
+}
+
+// UnsafeStreamAggregatesDirectExchangeRateServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamAggregatesDirectExchangeRateServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamAggregatesDirectExchangeRateServiceV1Server interface {
+	mustEmbedUnimplementedStreamAggregatesDirectExchangeRateServiceV1Server()
+}
+
+func RegisterStreamAggregatesDirectExchangeRateServiceV1Server(s grpc.ServiceRegistrar, srv StreamAggregatesDirectExchangeRateServiceV1Server) {
+	s.RegisterService(&StreamAggregatesDirectExchangeRateServiceV1_ServiceDesc, srv)
+}
+
+func _StreamAggregatesDirectExchangeRateServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamAggregatesDirectExchangeRateServiceV1Server).Subscribe(m, &streamAggregatesDirectExchangeRateServiceV1SubscribeServer{stream})
+}
+
+type StreamAggregatesDirectExchangeRateServiceV1_SubscribeServer interface {
+	Send(*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateResponseV1) error
+	grpc.ServerStream
+}
+
+type streamAggregatesDirectExchangeRateServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamAggregatesDirectExchangeRateServiceV1SubscribeServer) Send(m *aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamAggregatesDirectExchangeRateServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamAggregatesDirectExchangeRateServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamAggregatesDirectExchangeRateServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamAggregatesDirectExchangeRateServiceV1",
+	HandlerType: (*StreamAggregatesDirectExchangeRateServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamAggregatesDirectExchangeRateServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
