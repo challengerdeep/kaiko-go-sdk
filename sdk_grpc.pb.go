@@ -8,6 +8,7 @@ import (
 	aggregates_ohlcv_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_ohlcv_v1"
 	aggregates_spot_exchange_rate_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v1"
 	aggregates_vwap_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/aggregates_vwap_v1"
+	index_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/index_v1"
 	market_update_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/market_update_v1"
 	trades_v1 "github.com/challengerdeep/kaiko-go-sdk/stream/trades_v1"
 	grpc "google.golang.org/grpc"
@@ -593,6 +594,121 @@ var StreamAggregatesVWAPServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamAggregatesVWAPServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+// StreamIndexServiceV1Client is the client API for StreamIndexServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamIndexServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *index_v1.StreamIndexServiceRequestV1, opts ...grpc.CallOption) (StreamIndexServiceV1_SubscribeClient, error)
+}
+
+type streamIndexServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamIndexServiceV1Client(cc grpc.ClientConnInterface) StreamIndexServiceV1Client {
+	return &streamIndexServiceV1Client{cc}
+}
+
+func (c *streamIndexServiceV1Client) Subscribe(ctx context.Context, in *index_v1.StreamIndexServiceRequestV1, opts ...grpc.CallOption) (StreamIndexServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamIndexServiceV1_ServiceDesc.Streams[0], "/kaikosdk.StreamIndexServiceV1/Subscribe", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamIndexServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamIndexServiceV1_SubscribeClient interface {
+	Recv() (*index_v1.StreamIndexServiceResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamIndexServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamIndexServiceV1SubscribeClient) Recv() (*index_v1.StreamIndexServiceResponseV1, error) {
+	m := new(index_v1.StreamIndexServiceResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamIndexServiceV1Server is the server API for StreamIndexServiceV1 service.
+// All implementations must embed UnimplementedStreamIndexServiceV1Server
+// for forward compatibility
+type StreamIndexServiceV1Server interface {
+	// Subscribe
+	Subscribe(*index_v1.StreamIndexServiceRequestV1, StreamIndexServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamIndexServiceV1Server()
+}
+
+// UnimplementedStreamIndexServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamIndexServiceV1Server struct {
+}
+
+func (UnimplementedStreamIndexServiceV1Server) Subscribe(*index_v1.StreamIndexServiceRequestV1, StreamIndexServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamIndexServiceV1Server) mustEmbedUnimplementedStreamIndexServiceV1Server() {}
+
+// UnsafeStreamIndexServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamIndexServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamIndexServiceV1Server interface {
+	mustEmbedUnimplementedStreamIndexServiceV1Server()
+}
+
+func RegisterStreamIndexServiceV1Server(s grpc.ServiceRegistrar, srv StreamIndexServiceV1Server) {
+	s.RegisterService(&StreamIndexServiceV1_ServiceDesc, srv)
+}
+
+func _StreamIndexServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(index_v1.StreamIndexServiceRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamIndexServiceV1Server).Subscribe(m, &streamIndexServiceV1SubscribeServer{stream})
+}
+
+type StreamIndexServiceV1_SubscribeServer interface {
+	Send(*index_v1.StreamIndexServiceResponseV1) error
+	grpc.ServerStream
+}
+
+type streamIndexServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamIndexServiceV1SubscribeServer) Send(m *index_v1.StreamIndexServiceResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamIndexServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamIndexServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamIndexServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamIndexServiceV1",
+	HandlerType: (*StreamIndexServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamIndexServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
