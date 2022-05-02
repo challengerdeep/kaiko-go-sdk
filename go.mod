@@ -1,4 +1,4 @@
-module github.com/challengerdeep/kaiko-go-sdk
+module github.com/kaikodata/kaiko-go-sdk
 
 go 1.16
 
