@@ -9,7 +9,6 @@ import (
 	aggregates_ohlcv_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_ohlcv_v1"
 	aggregates_spot_exchange_rate_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v1"
 	aggregates_vwap_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_vwap_v1"
-	derivatives_price_v2 "github.com/kaikodata/kaiko-go-sdk/stream/derivatives_price_v2"
 	index_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_v1"
 	market_update_v1 "github.com/kaikodata/kaiko-go-sdk/stream/market_update_v1"
 	trades_v1 "github.com/kaikodata/kaiko-go-sdk/stream/trades_v1"
@@ -712,122 +711,6 @@ var StreamAggregatesVWAPServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamAggregatesVWAPServiceV1_Subscribe_Handler,
-			ServerStreams: true,
-		},
-	},
-	Metadata: "sdk/sdk.proto",
-}
-
-// StreamDerivativesPriceServiceV2Client is the client API for StreamDerivativesPriceServiceV2 service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type StreamDerivativesPriceServiceV2Client interface {
-	// Subscribe
-	Subscribe(ctx context.Context, in *derivatives_price_v2.StreamDerivativesPriceRequestV2, opts ...grpc.CallOption) (StreamDerivativesPriceServiceV2_SubscribeClient, error)
-}
-
-type streamDerivativesPriceServiceV2Client struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewStreamDerivativesPriceServiceV2Client(cc grpc.ClientConnInterface) StreamDerivativesPriceServiceV2Client {
-	return &streamDerivativesPriceServiceV2Client{cc}
-}
-
-func (c *streamDerivativesPriceServiceV2Client) Subscribe(ctx context.Context, in *derivatives_price_v2.StreamDerivativesPriceRequestV2, opts ...grpc.CallOption) (StreamDerivativesPriceServiceV2_SubscribeClient, error) {
-	stream, err := c.cc.NewStream(ctx, &StreamDerivativesPriceServiceV2_ServiceDesc.Streams[0], "/kaikosdk.StreamDerivativesPriceServiceV2/Subscribe", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &streamDerivativesPriceServiceV2SubscribeClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type StreamDerivativesPriceServiceV2_SubscribeClient interface {
-	Recv() (*derivatives_price_v2.StreamDerivativesPriceResponseV2, error)
-	grpc.ClientStream
-}
-
-type streamDerivativesPriceServiceV2SubscribeClient struct {
-	grpc.ClientStream
-}
-
-func (x *streamDerivativesPriceServiceV2SubscribeClient) Recv() (*derivatives_price_v2.StreamDerivativesPriceResponseV2, error) {
-	m := new(derivatives_price_v2.StreamDerivativesPriceResponseV2)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-// StreamDerivativesPriceServiceV2Server is the server API for StreamDerivativesPriceServiceV2 service.
-// All implementations must embed UnimplementedStreamDerivativesPriceServiceV2Server
-// for forward compatibility
-type StreamDerivativesPriceServiceV2Server interface {
-	// Subscribe
-	Subscribe(*derivatives_price_v2.StreamDerivativesPriceRequestV2, StreamDerivativesPriceServiceV2_SubscribeServer) error
-	mustEmbedUnimplementedStreamDerivativesPriceServiceV2Server()
-}
-
-// UnimplementedStreamDerivativesPriceServiceV2Server must be embedded to have forward compatible implementations.
-type UnimplementedStreamDerivativesPriceServiceV2Server struct {
-}
-
-func (UnimplementedStreamDerivativesPriceServiceV2Server) Subscribe(*derivatives_price_v2.StreamDerivativesPriceRequestV2, StreamDerivativesPriceServiceV2_SubscribeServer) error {
-	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
-}
-func (UnimplementedStreamDerivativesPriceServiceV2Server) mustEmbedUnimplementedStreamDerivativesPriceServiceV2Server() {
-}
-
-// UnsafeStreamDerivativesPriceServiceV2Server may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to StreamDerivativesPriceServiceV2Server will
-// result in compilation errors.
-type UnsafeStreamDerivativesPriceServiceV2Server interface {
-	mustEmbedUnimplementedStreamDerivativesPriceServiceV2Server()
-}
-
-func RegisterStreamDerivativesPriceServiceV2Server(s grpc.ServiceRegistrar, srv StreamDerivativesPriceServiceV2Server) {
-	s.RegisterService(&StreamDerivativesPriceServiceV2_ServiceDesc, srv)
-}
-
-func _StreamDerivativesPriceServiceV2_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(derivatives_price_v2.StreamDerivativesPriceRequestV2)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(StreamDerivativesPriceServiceV2Server).Subscribe(m, &streamDerivativesPriceServiceV2SubscribeServer{stream})
-}
-
-type StreamDerivativesPriceServiceV2_SubscribeServer interface {
-	Send(*derivatives_price_v2.StreamDerivativesPriceResponseV2) error
-	grpc.ServerStream
-}
-
-type streamDerivativesPriceServiceV2SubscribeServer struct {
-	grpc.ServerStream
-}
-
-func (x *streamDerivativesPriceServiceV2SubscribeServer) Send(m *derivatives_price_v2.StreamDerivativesPriceResponseV2) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-// StreamDerivativesPriceServiceV2_ServiceDesc is the grpc.ServiceDesc for StreamDerivativesPriceServiceV2 service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var StreamDerivativesPriceServiceV2_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "kaikosdk.StreamDerivativesPriceServiceV2",
-	HandlerType: (*StreamDerivativesPriceServiceV2Server)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "Subscribe",
-			Handler:       _StreamDerivativesPriceServiceV2_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
