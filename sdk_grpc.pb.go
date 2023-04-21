@@ -14,6 +14,7 @@ import (
 	aggregates_ohlcv_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_ohlcv_v1"
 	aggregates_spot_exchange_rate_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v1"
 	aggregates_vwap_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_vwap_v1"
+	index_multi_assets_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_multi_assets_v1"
 	index_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_v1"
 	market_update_v1 "github.com/kaikodata/kaiko-go-sdk/stream/market_update_v1"
 	trades_v1 "github.com/kaikodata/kaiko-go-sdk/stream/trades_v1"
@@ -982,6 +983,126 @@ var StreamIndexServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamIndexServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
+	StreamIndexMultiAssetsServiceV1_Subscribe_FullMethodName = "/kaikosdk.StreamIndexMultiAssetsServiceV1/Subscribe"
+)
+
+// StreamIndexMultiAssetsServiceV1Client is the client API for StreamIndexMultiAssetsServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamIndexMultiAssetsServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *index_multi_assets_v1.StreamIndexMultiAssetsServiceRequestV1, opts ...grpc.CallOption) (StreamIndexMultiAssetsServiceV1_SubscribeClient, error)
+}
+
+type streamIndexMultiAssetsServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamIndexMultiAssetsServiceV1Client(cc grpc.ClientConnInterface) StreamIndexMultiAssetsServiceV1Client {
+	return &streamIndexMultiAssetsServiceV1Client{cc}
+}
+
+func (c *streamIndexMultiAssetsServiceV1Client) Subscribe(ctx context.Context, in *index_multi_assets_v1.StreamIndexMultiAssetsServiceRequestV1, opts ...grpc.CallOption) (StreamIndexMultiAssetsServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamIndexMultiAssetsServiceV1_ServiceDesc.Streams[0], StreamIndexMultiAssetsServiceV1_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamIndexMultiAssetsServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamIndexMultiAssetsServiceV1_SubscribeClient interface {
+	Recv() (*index_multi_assets_v1.StreamIndexMultiAssetsServiceResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamIndexMultiAssetsServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamIndexMultiAssetsServiceV1SubscribeClient) Recv() (*index_multi_assets_v1.StreamIndexMultiAssetsServiceResponseV1, error) {
+	m := new(index_multi_assets_v1.StreamIndexMultiAssetsServiceResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamIndexMultiAssetsServiceV1Server is the server API for StreamIndexMultiAssetsServiceV1 service.
+// All implementations must embed UnimplementedStreamIndexMultiAssetsServiceV1Server
+// for forward compatibility
+type StreamIndexMultiAssetsServiceV1Server interface {
+	// Subscribe
+	Subscribe(*index_multi_assets_v1.StreamIndexMultiAssetsServiceRequestV1, StreamIndexMultiAssetsServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamIndexMultiAssetsServiceV1Server()
+}
+
+// UnimplementedStreamIndexMultiAssetsServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamIndexMultiAssetsServiceV1Server struct {
+}
+
+func (UnimplementedStreamIndexMultiAssetsServiceV1Server) Subscribe(*index_multi_assets_v1.StreamIndexMultiAssetsServiceRequestV1, StreamIndexMultiAssetsServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamIndexMultiAssetsServiceV1Server) mustEmbedUnimplementedStreamIndexMultiAssetsServiceV1Server() {
+}
+
+// UnsafeStreamIndexMultiAssetsServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamIndexMultiAssetsServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamIndexMultiAssetsServiceV1Server interface {
+	mustEmbedUnimplementedStreamIndexMultiAssetsServiceV1Server()
+}
+
+func RegisterStreamIndexMultiAssetsServiceV1Server(s grpc.ServiceRegistrar, srv StreamIndexMultiAssetsServiceV1Server) {
+	s.RegisterService(&StreamIndexMultiAssetsServiceV1_ServiceDesc, srv)
+}
+
+func _StreamIndexMultiAssetsServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(index_multi_assets_v1.StreamIndexMultiAssetsServiceRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamIndexMultiAssetsServiceV1Server).Subscribe(m, &streamIndexMultiAssetsServiceV1SubscribeServer{stream})
+}
+
+type StreamIndexMultiAssetsServiceV1_SubscribeServer interface {
+	Send(*index_multi_assets_v1.StreamIndexMultiAssetsServiceResponseV1) error
+	grpc.ServerStream
+}
+
+type streamIndexMultiAssetsServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamIndexMultiAssetsServiceV1SubscribeServer) Send(m *index_multi_assets_v1.StreamIndexMultiAssetsServiceResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamIndexMultiAssetsServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamIndexMultiAssetsServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamIndexMultiAssetsServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamIndexMultiAssetsServiceV1",
+	HandlerType: (*StreamIndexMultiAssetsServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamIndexMultiAssetsServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
