@@ -399,6 +399,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StreamAggregatesSpotExchangeRateServiceV1Client interface {
+	// Deprecated: Do not use.
 	// Subscribe
 	Subscribe(ctx context.Context, in *aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateRequestV1, opts ...grpc.CallOption) (StreamAggregatesSpotExchangeRateServiceV1_SubscribeClient, error)
 }
@@ -411,6 +412,7 @@ func NewStreamAggregatesSpotExchangeRateServiceV1Client(cc grpc.ClientConnInterf
 	return &streamAggregatesSpotExchangeRateServiceV1Client{cc}
 }
 
+// Deprecated: Do not use.
 func (c *streamAggregatesSpotExchangeRateServiceV1Client) Subscribe(ctx context.Context, in *aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateRequestV1, opts ...grpc.CallOption) (StreamAggregatesSpotExchangeRateServiceV1_SubscribeClient, error) {
 	stream, err := c.cc.NewStream(ctx, &StreamAggregatesSpotExchangeRateServiceV1_ServiceDesc.Streams[0], StreamAggregatesSpotExchangeRateServiceV1_Subscribe_FullMethodName, opts...)
 	if err != nil {
@@ -447,6 +449,7 @@ func (x *streamAggregatesSpotExchangeRateServiceV1SubscribeClient) Recv() (*aggr
 // All implementations must embed UnimplementedStreamAggregatesSpotExchangeRateServiceV1Server
 // for forward compatibility
 type StreamAggregatesSpotExchangeRateServiceV1Server interface {
+	// Deprecated: Do not use.
 	// Subscribe
 	Subscribe(*aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateRequestV1, StreamAggregatesSpotExchangeRateServiceV1_SubscribeServer) error
 	mustEmbedUnimplementedStreamAggregatesSpotExchangeRateServiceV1Server()
@@ -519,6 +522,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StreamAggregatesDirectExchangeRateServiceV1Client interface {
+	// Deprecated: Do not use.
 	// Subscribe
 	Subscribe(ctx context.Context, in *aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateRequestV1, opts ...grpc.CallOption) (StreamAggregatesDirectExchangeRateServiceV1_SubscribeClient, error)
 }
@@ -531,6 +535,7 @@ func NewStreamAggregatesDirectExchangeRateServiceV1Client(cc grpc.ClientConnInte
 	return &streamAggregatesDirectExchangeRateServiceV1Client{cc}
 }
 
+// Deprecated: Do not use.
 func (c *streamAggregatesDirectExchangeRateServiceV1Client) Subscribe(ctx context.Context, in *aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateRequestV1, opts ...grpc.CallOption) (StreamAggregatesDirectExchangeRateServiceV1_SubscribeClient, error) {
 	stream, err := c.cc.NewStream(ctx, &StreamAggregatesDirectExchangeRateServiceV1_ServiceDesc.Streams[0], StreamAggregatesDirectExchangeRateServiceV1_Subscribe_FullMethodName, opts...)
 	if err != nil {
@@ -567,6 +572,7 @@ func (x *streamAggregatesDirectExchangeRateServiceV1SubscribeClient) Recv() (*ag
 // All implementations must embed UnimplementedStreamAggregatesDirectExchangeRateServiceV1Server
 // for forward compatibility
 type StreamAggregatesDirectExchangeRateServiceV1Server interface {
+	// Deprecated: Do not use.
 	// Subscribe
 	Subscribe(*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateRequestV1, StreamAggregatesDirectExchangeRateServiceV1_SubscribeServer) error
 	mustEmbedUnimplementedStreamAggregatesDirectExchangeRateServiceV1Server()
