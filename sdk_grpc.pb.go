@@ -14,6 +14,7 @@ import (
 	aggregates_ohlcv_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_ohlcv_v1"
 	aggregates_spot_exchange_rate_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v1"
 	aggregates_vwap_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_vwap_v1"
+	index_forex_rate_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_forex_rate_v1"
 	index_multi_assets_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_multi_assets_v1"
 	index_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_v1"
 	market_update_v1 "github.com/kaikodata/kaiko-go-sdk/stream/market_update_v1"
@@ -1229,6 +1230,126 @@ var StreamMarketUpdateServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamMarketUpdateServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
+	StreamIndexForexRateServiceV1_Subscribe_FullMethodName = "/kaikosdk.StreamIndexForexRateServiceV1/Subscribe"
+)
+
+// StreamIndexForexRateServiceV1Client is the client API for StreamIndexForexRateServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamIndexForexRateServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *index_forex_rate_v1.StreamIndexForexRateServiceRequestV1, opts ...grpc.CallOption) (StreamIndexForexRateServiceV1_SubscribeClient, error)
+}
+
+type streamIndexForexRateServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamIndexForexRateServiceV1Client(cc grpc.ClientConnInterface) StreamIndexForexRateServiceV1Client {
+	return &streamIndexForexRateServiceV1Client{cc}
+}
+
+func (c *streamIndexForexRateServiceV1Client) Subscribe(ctx context.Context, in *index_forex_rate_v1.StreamIndexForexRateServiceRequestV1, opts ...grpc.CallOption) (StreamIndexForexRateServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamIndexForexRateServiceV1_ServiceDesc.Streams[0], StreamIndexForexRateServiceV1_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamIndexForexRateServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamIndexForexRateServiceV1_SubscribeClient interface {
+	Recv() (*index_forex_rate_v1.StreamIndexForexRateServiceResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamIndexForexRateServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamIndexForexRateServiceV1SubscribeClient) Recv() (*index_forex_rate_v1.StreamIndexForexRateServiceResponseV1, error) {
+	m := new(index_forex_rate_v1.StreamIndexForexRateServiceResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamIndexForexRateServiceV1Server is the server API for StreamIndexForexRateServiceV1 service.
+// All implementations must embed UnimplementedStreamIndexForexRateServiceV1Server
+// for forward compatibility
+type StreamIndexForexRateServiceV1Server interface {
+	// Subscribe
+	Subscribe(*index_forex_rate_v1.StreamIndexForexRateServiceRequestV1, StreamIndexForexRateServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamIndexForexRateServiceV1Server()
+}
+
+// UnimplementedStreamIndexForexRateServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamIndexForexRateServiceV1Server struct {
+}
+
+func (UnimplementedStreamIndexForexRateServiceV1Server) Subscribe(*index_forex_rate_v1.StreamIndexForexRateServiceRequestV1, StreamIndexForexRateServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamIndexForexRateServiceV1Server) mustEmbedUnimplementedStreamIndexForexRateServiceV1Server() {
+}
+
+// UnsafeStreamIndexForexRateServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamIndexForexRateServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamIndexForexRateServiceV1Server interface {
+	mustEmbedUnimplementedStreamIndexForexRateServiceV1Server()
+}
+
+func RegisterStreamIndexForexRateServiceV1Server(s grpc.ServiceRegistrar, srv StreamIndexForexRateServiceV1Server) {
+	s.RegisterService(&StreamIndexForexRateServiceV1_ServiceDesc, srv)
+}
+
+func _StreamIndexForexRateServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(index_forex_rate_v1.StreamIndexForexRateServiceRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamIndexForexRateServiceV1Server).Subscribe(m, &streamIndexForexRateServiceV1SubscribeServer{stream})
+}
+
+type StreamIndexForexRateServiceV1_SubscribeServer interface {
+	Send(*index_forex_rate_v1.StreamIndexForexRateServiceResponseV1) error
+	grpc.ServerStream
+}
+
+type streamIndexForexRateServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamIndexForexRateServiceV1SubscribeServer) Send(m *index_forex_rate_v1.StreamIndexForexRateServiceResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamIndexForexRateServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamIndexForexRateServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamIndexForexRateServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamIndexForexRateServiceV1",
+	HandlerType: (*StreamIndexForexRateServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamIndexForexRateServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
