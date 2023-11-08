@@ -10,7 +10,9 @@ import (
 	context "context"
 	aggregated_price_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregated_price_v1"
 	aggregated_quote_v2 "github.com/kaikodata/kaiko-go-sdk/stream/aggregated_quote_v2"
+	aggregates_direct_exchange_rate_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_direct_exchange_rate_v1"
 	aggregates_ohlcv_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_ohlcv_v1"
+	aggregates_spot_exchange_rate_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v1"
 	aggregates_vwap_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_vwap_v1"
 	index_forex_rate_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_forex_rate_v1"
 	index_multi_assets_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_multi_assets_v1"
@@ -982,6 +984,246 @@ var StreamMarketUpdateServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamMarketUpdateServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
+	StreamAggregatesSpotExchangeRateV1ServiceV2_Subscribe_FullMethodName = "/kaikosdk.StreamAggregatesSpotExchangeRateV1ServiceV2/Subscribe"
+)
+
+// StreamAggregatesSpotExchangeRateV1ServiceV2Client is the client API for StreamAggregatesSpotExchangeRateV1ServiceV2 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamAggregatesSpotExchangeRateV1ServiceV2Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1RequestV2, opts ...grpc.CallOption) (StreamAggregatesSpotExchangeRateV1ServiceV2_SubscribeClient, error)
+}
+
+type streamAggregatesSpotExchangeRateV1ServiceV2Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamAggregatesSpotExchangeRateV1ServiceV2Client(cc grpc.ClientConnInterface) StreamAggregatesSpotExchangeRateV1ServiceV2Client {
+	return &streamAggregatesSpotExchangeRateV1ServiceV2Client{cc}
+}
+
+func (c *streamAggregatesSpotExchangeRateV1ServiceV2Client) Subscribe(ctx context.Context, in *aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1RequestV2, opts ...grpc.CallOption) (StreamAggregatesSpotExchangeRateV1ServiceV2_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamAggregatesSpotExchangeRateV1ServiceV2_ServiceDesc.Streams[0], StreamAggregatesSpotExchangeRateV1ServiceV2_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamAggregatesSpotExchangeRateV1ServiceV2SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamAggregatesSpotExchangeRateV1ServiceV2_SubscribeClient interface {
+	Recv() (*aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1ResponseV2, error)
+	grpc.ClientStream
+}
+
+type streamAggregatesSpotExchangeRateV1ServiceV2SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamAggregatesSpotExchangeRateV1ServiceV2SubscribeClient) Recv() (*aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1ResponseV2, error) {
+	m := new(aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1ResponseV2)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamAggregatesSpotExchangeRateV1ServiceV2Server is the server API for StreamAggregatesSpotExchangeRateV1ServiceV2 service.
+// All implementations must embed UnimplementedStreamAggregatesSpotExchangeRateV1ServiceV2Server
+// for forward compatibility
+type StreamAggregatesSpotExchangeRateV1ServiceV2Server interface {
+	// Subscribe
+	Subscribe(*aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1RequestV2, StreamAggregatesSpotExchangeRateV1ServiceV2_SubscribeServer) error
+	mustEmbedUnimplementedStreamAggregatesSpotExchangeRateV1ServiceV2Server()
+}
+
+// UnimplementedStreamAggregatesSpotExchangeRateV1ServiceV2Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamAggregatesSpotExchangeRateV1ServiceV2Server struct {
+}
+
+func (UnimplementedStreamAggregatesSpotExchangeRateV1ServiceV2Server) Subscribe(*aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1RequestV2, StreamAggregatesSpotExchangeRateV1ServiceV2_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamAggregatesSpotExchangeRateV1ServiceV2Server) mustEmbedUnimplementedStreamAggregatesSpotExchangeRateV1ServiceV2Server() {
+}
+
+// UnsafeStreamAggregatesSpotExchangeRateV1ServiceV2Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamAggregatesSpotExchangeRateV1ServiceV2Server will
+// result in compilation errors.
+type UnsafeStreamAggregatesSpotExchangeRateV1ServiceV2Server interface {
+	mustEmbedUnimplementedStreamAggregatesSpotExchangeRateV1ServiceV2Server()
+}
+
+func RegisterStreamAggregatesSpotExchangeRateV1ServiceV2Server(s grpc.ServiceRegistrar, srv StreamAggregatesSpotExchangeRateV1ServiceV2Server) {
+	s.RegisterService(&StreamAggregatesSpotExchangeRateV1ServiceV2_ServiceDesc, srv)
+}
+
+func _StreamAggregatesSpotExchangeRateV1ServiceV2_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1RequestV2)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamAggregatesSpotExchangeRateV1ServiceV2Server).Subscribe(m, &streamAggregatesSpotExchangeRateV1ServiceV2SubscribeServer{stream})
+}
+
+type StreamAggregatesSpotExchangeRateV1ServiceV2_SubscribeServer interface {
+	Send(*aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1ResponseV2) error
+	grpc.ServerStream
+}
+
+type streamAggregatesSpotExchangeRateV1ServiceV2SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamAggregatesSpotExchangeRateV1ServiceV2SubscribeServer) Send(m *aggregates_spot_exchange_rate_v1.StreamAggregatesSpotExchangeRateV1ResponseV2) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamAggregatesSpotExchangeRateV1ServiceV2_ServiceDesc is the grpc.ServiceDesc for StreamAggregatesSpotExchangeRateV1ServiceV2 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamAggregatesSpotExchangeRateV1ServiceV2_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamAggregatesSpotExchangeRateV1ServiceV2",
+	HandlerType: (*StreamAggregatesSpotExchangeRateV1ServiceV2Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamAggregatesSpotExchangeRateV1ServiceV2_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
+	StreamAggregatesSpotDirectExchangeRateV1ServiceV2_Subscribe_FullMethodName = "/kaikosdk.StreamAggregatesSpotDirectExchangeRateV1ServiceV2/Subscribe"
+)
+
+// StreamAggregatesSpotDirectExchangeRateV1ServiceV2Client is the client API for StreamAggregatesSpotDirectExchangeRateV1ServiceV2 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamAggregatesSpotDirectExchangeRateV1ServiceV2Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1RequestV2, opts ...grpc.CallOption) (StreamAggregatesSpotDirectExchangeRateV1ServiceV2_SubscribeClient, error)
+}
+
+type streamAggregatesSpotDirectExchangeRateV1ServiceV2Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamAggregatesSpotDirectExchangeRateV1ServiceV2Client(cc grpc.ClientConnInterface) StreamAggregatesSpotDirectExchangeRateV1ServiceV2Client {
+	return &streamAggregatesSpotDirectExchangeRateV1ServiceV2Client{cc}
+}
+
+func (c *streamAggregatesSpotDirectExchangeRateV1ServiceV2Client) Subscribe(ctx context.Context, in *aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1RequestV2, opts ...grpc.CallOption) (StreamAggregatesSpotDirectExchangeRateV1ServiceV2_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamAggregatesSpotDirectExchangeRateV1ServiceV2_ServiceDesc.Streams[0], StreamAggregatesSpotDirectExchangeRateV1ServiceV2_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamAggregatesSpotDirectExchangeRateV1ServiceV2SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamAggregatesSpotDirectExchangeRateV1ServiceV2_SubscribeClient interface {
+	Recv() (*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1ResponseV2, error)
+	grpc.ClientStream
+}
+
+type streamAggregatesSpotDirectExchangeRateV1ServiceV2SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamAggregatesSpotDirectExchangeRateV1ServiceV2SubscribeClient) Recv() (*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1ResponseV2, error) {
+	m := new(aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1ResponseV2)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamAggregatesSpotDirectExchangeRateV1ServiceV2Server is the server API for StreamAggregatesSpotDirectExchangeRateV1ServiceV2 service.
+// All implementations must embed UnimplementedStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server
+// for forward compatibility
+type StreamAggregatesSpotDirectExchangeRateV1ServiceV2Server interface {
+	// Subscribe
+	Subscribe(*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1RequestV2, StreamAggregatesSpotDirectExchangeRateV1ServiceV2_SubscribeServer) error
+	mustEmbedUnimplementedStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server()
+}
+
+// UnimplementedStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server struct {
+}
+
+func (UnimplementedStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server) Subscribe(*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1RequestV2, StreamAggregatesSpotDirectExchangeRateV1ServiceV2_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server) mustEmbedUnimplementedStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server() {
+}
+
+// UnsafeStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamAggregatesSpotDirectExchangeRateV1ServiceV2Server will
+// result in compilation errors.
+type UnsafeStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server interface {
+	mustEmbedUnimplementedStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server()
+}
+
+func RegisterStreamAggregatesSpotDirectExchangeRateV1ServiceV2Server(s grpc.ServiceRegistrar, srv StreamAggregatesSpotDirectExchangeRateV1ServiceV2Server) {
+	s.RegisterService(&StreamAggregatesSpotDirectExchangeRateV1ServiceV2_ServiceDesc, srv)
+}
+
+func _StreamAggregatesSpotDirectExchangeRateV1ServiceV2_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1RequestV2)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamAggregatesSpotDirectExchangeRateV1ServiceV2Server).Subscribe(m, &streamAggregatesSpotDirectExchangeRateV1ServiceV2SubscribeServer{stream})
+}
+
+type StreamAggregatesSpotDirectExchangeRateV1ServiceV2_SubscribeServer interface {
+	Send(*aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1ResponseV2) error
+	grpc.ServerStream
+}
+
+type streamAggregatesSpotDirectExchangeRateV1ServiceV2SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamAggregatesSpotDirectExchangeRateV1ServiceV2SubscribeServer) Send(m *aggregates_direct_exchange_rate_v1.StreamAggregatesDirectExchangeRateV1ResponseV2) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamAggregatesSpotDirectExchangeRateV1ServiceV2_ServiceDesc is the grpc.ServiceDesc for StreamAggregatesSpotDirectExchangeRateV1ServiceV2 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamAggregatesSpotDirectExchangeRateV1ServiceV2_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamAggregatesSpotDirectExchangeRateV1ServiceV2",
+	HandlerType: (*StreamAggregatesSpotDirectExchangeRateV1ServiceV2Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamAggregatesSpotDirectExchangeRateV1ServiceV2_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
