@@ -22,7 +22,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// StreamAggregatesSpotExchangeRateResponseV2
+// StreamAggregatesSpotExchangeRateV1ResponseV2
 type StreamAggregatesSpotExchangeRateV1ResponseV2 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
