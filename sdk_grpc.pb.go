@@ -14,9 +14,11 @@ import (
 	aggregates_ohlcv_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_ohlcv_v1"
 	aggregates_spot_exchange_rate_v2 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v2"
 	aggregates_vwap_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_vwap_v1"
+	derivatives_instrument_metrics_v1 "github.com/kaikodata/kaiko-go-sdk/stream/derivatives_instrument_metrics_v1"
 	index_forex_rate_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_forex_rate_v1"
 	index_multi_assets_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_multi_assets_v1"
 	index_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_v1"
+	iv_svi_parameters_v1 "github.com/kaikodata/kaiko-go-sdk/stream/iv_svi_parameters_v1"
 	market_update_v1 "github.com/kaikodata/kaiko-go-sdk/stream/market_update_v1"
 	trades_v1 "github.com/kaikodata/kaiko-go-sdk/stream/trades_v1"
 	grpc "google.golang.org/grpc"
@@ -1344,6 +1346,246 @@ var StreamIndexForexRateServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamIndexForexRateServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
+	StreamDerivativesInstrumentMetricsV1_Subscribe_FullMethodName = "/kaikosdk.StreamDerivativesInstrumentMetricsV1/Subscribe"
+)
+
+// StreamDerivativesInstrumentMetricsV1Client is the client API for StreamDerivativesInstrumentMetricsV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamDerivativesInstrumentMetricsV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, opts ...grpc.CallOption) (StreamDerivativesInstrumentMetricsV1_SubscribeClient, error)
+}
+
+type streamDerivativesInstrumentMetricsV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamDerivativesInstrumentMetricsV1Client(cc grpc.ClientConnInterface) StreamDerivativesInstrumentMetricsV1Client {
+	return &streamDerivativesInstrumentMetricsV1Client{cc}
+}
+
+func (c *streamDerivativesInstrumentMetricsV1Client) Subscribe(ctx context.Context, in *derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, opts ...grpc.CallOption) (StreamDerivativesInstrumentMetricsV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamDerivativesInstrumentMetricsV1_ServiceDesc.Streams[0], StreamDerivativesInstrumentMetricsV1_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamDerivativesInstrumentMetricsV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamDerivativesInstrumentMetricsV1_SubscribeClient interface {
+	Recv() (*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamDerivativesInstrumentMetricsV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamDerivativesInstrumentMetricsV1SubscribeClient) Recv() (*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1, error) {
+	m := new(derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamDerivativesInstrumentMetricsV1Server is the server API for StreamDerivativesInstrumentMetricsV1 service.
+// All implementations must embed UnimplementedStreamDerivativesInstrumentMetricsV1Server
+// for forward compatibility
+type StreamDerivativesInstrumentMetricsV1Server interface {
+	// Subscribe
+	Subscribe(*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, StreamDerivativesInstrumentMetricsV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamDerivativesInstrumentMetricsV1Server()
+}
+
+// UnimplementedStreamDerivativesInstrumentMetricsV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamDerivativesInstrumentMetricsV1Server struct {
+}
+
+func (UnimplementedStreamDerivativesInstrumentMetricsV1Server) Subscribe(*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, StreamDerivativesInstrumentMetricsV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamDerivativesInstrumentMetricsV1Server) mustEmbedUnimplementedStreamDerivativesInstrumentMetricsV1Server() {
+}
+
+// UnsafeStreamDerivativesInstrumentMetricsV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamDerivativesInstrumentMetricsV1Server will
+// result in compilation errors.
+type UnsafeStreamDerivativesInstrumentMetricsV1Server interface {
+	mustEmbedUnimplementedStreamDerivativesInstrumentMetricsV1Server()
+}
+
+func RegisterStreamDerivativesInstrumentMetricsV1Server(s grpc.ServiceRegistrar, srv StreamDerivativesInstrumentMetricsV1Server) {
+	s.RegisterService(&StreamDerivativesInstrumentMetricsV1_ServiceDesc, srv)
+}
+
+func _StreamDerivativesInstrumentMetricsV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamDerivativesInstrumentMetricsV1Server).Subscribe(m, &streamDerivativesInstrumentMetricsV1SubscribeServer{stream})
+}
+
+type StreamDerivativesInstrumentMetricsV1_SubscribeServer interface {
+	Send(*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1) error
+	grpc.ServerStream
+}
+
+type streamDerivativesInstrumentMetricsV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamDerivativesInstrumentMetricsV1SubscribeServer) Send(m *derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamDerivativesInstrumentMetricsV1_ServiceDesc is the grpc.ServiceDesc for StreamDerivativesInstrumentMetricsV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamDerivativesInstrumentMetricsV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamDerivativesInstrumentMetricsV1",
+	HandlerType: (*StreamDerivativesInstrumentMetricsV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamDerivativesInstrumentMetricsV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
+	StreamIvSviParametersServiceV1_Subscribe_FullMethodName = "/kaikosdk.StreamIvSviParametersServiceV1/Subscribe"
+)
+
+// StreamIvSviParametersServiceV1Client is the client API for StreamIvSviParametersServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamIvSviParametersServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *iv_svi_parameters_v1.StreamIvSviParametersRequestV1, opts ...grpc.CallOption) (StreamIvSviParametersServiceV1_SubscribeClient, error)
+}
+
+type streamIvSviParametersServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamIvSviParametersServiceV1Client(cc grpc.ClientConnInterface) StreamIvSviParametersServiceV1Client {
+	return &streamIvSviParametersServiceV1Client{cc}
+}
+
+func (c *streamIvSviParametersServiceV1Client) Subscribe(ctx context.Context, in *iv_svi_parameters_v1.StreamIvSviParametersRequestV1, opts ...grpc.CallOption) (StreamIvSviParametersServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamIvSviParametersServiceV1_ServiceDesc.Streams[0], StreamIvSviParametersServiceV1_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamIvSviParametersServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamIvSviParametersServiceV1_SubscribeClient interface {
+	Recv() (*iv_svi_parameters_v1.StreamIvSviParametersResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamIvSviParametersServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamIvSviParametersServiceV1SubscribeClient) Recv() (*iv_svi_parameters_v1.StreamIvSviParametersResponseV1, error) {
+	m := new(iv_svi_parameters_v1.StreamIvSviParametersResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamIvSviParametersServiceV1Server is the server API for StreamIvSviParametersServiceV1 service.
+// All implementations must embed UnimplementedStreamIvSviParametersServiceV1Server
+// for forward compatibility
+type StreamIvSviParametersServiceV1Server interface {
+	// Subscribe
+	Subscribe(*iv_svi_parameters_v1.StreamIvSviParametersRequestV1, StreamIvSviParametersServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamIvSviParametersServiceV1Server()
+}
+
+// UnimplementedStreamIvSviParametersServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamIvSviParametersServiceV1Server struct {
+}
+
+func (UnimplementedStreamIvSviParametersServiceV1Server) Subscribe(*iv_svi_parameters_v1.StreamIvSviParametersRequestV1, StreamIvSviParametersServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamIvSviParametersServiceV1Server) mustEmbedUnimplementedStreamIvSviParametersServiceV1Server() {
+}
+
+// UnsafeStreamIvSviParametersServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamIvSviParametersServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamIvSviParametersServiceV1Server interface {
+	mustEmbedUnimplementedStreamIvSviParametersServiceV1Server()
+}
+
+func RegisterStreamIvSviParametersServiceV1Server(s grpc.ServiceRegistrar, srv StreamIvSviParametersServiceV1Server) {
+	s.RegisterService(&StreamIvSviParametersServiceV1_ServiceDesc, srv)
+}
+
+func _StreamIvSviParametersServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(iv_svi_parameters_v1.StreamIvSviParametersRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamIvSviParametersServiceV1Server).Subscribe(m, &streamIvSviParametersServiceV1SubscribeServer{stream})
+}
+
+type StreamIvSviParametersServiceV1_SubscribeServer interface {
+	Send(*iv_svi_parameters_v1.StreamIvSviParametersResponseV1) error
+	grpc.ServerStream
+}
+
+type streamIvSviParametersServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamIvSviParametersServiceV1SubscribeServer) Send(m *iv_svi_parameters_v1.StreamIvSviParametersResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamIvSviParametersServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamIvSviParametersServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamIvSviParametersServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamIvSviParametersServiceV1",
+	HandlerType: (*StreamIvSviParametersServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamIvSviParametersServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
