@@ -1353,31 +1353,31 @@ var StreamIndexForexRateServiceV1_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	StreamDerivativesInstrumentMetricsV1_Subscribe_FullMethodName = "/kaikosdk.StreamDerivativesInstrumentMetricsV1/Subscribe"
+	StreamDerivativesInstrumentMetricsServiceV1_Subscribe_FullMethodName = "/kaikosdk.StreamDerivativesInstrumentMetricsServiceV1/Subscribe"
 )
 
-// StreamDerivativesInstrumentMetricsV1Client is the client API for StreamDerivativesInstrumentMetricsV1 service.
+// StreamDerivativesInstrumentMetricsServiceV1Client is the client API for StreamDerivativesInstrumentMetricsServiceV1 service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type StreamDerivativesInstrumentMetricsV1Client interface {
+type StreamDerivativesInstrumentMetricsServiceV1Client interface {
 	// Subscribe
-	Subscribe(ctx context.Context, in *derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, opts ...grpc.CallOption) (StreamDerivativesInstrumentMetricsV1_SubscribeClient, error)
+	Subscribe(ctx context.Context, in *derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, opts ...grpc.CallOption) (StreamDerivativesInstrumentMetricsServiceV1_SubscribeClient, error)
 }
 
-type streamDerivativesInstrumentMetricsV1Client struct {
+type streamDerivativesInstrumentMetricsServiceV1Client struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewStreamDerivativesInstrumentMetricsV1Client(cc grpc.ClientConnInterface) StreamDerivativesInstrumentMetricsV1Client {
-	return &streamDerivativesInstrumentMetricsV1Client{cc}
+func NewStreamDerivativesInstrumentMetricsServiceV1Client(cc grpc.ClientConnInterface) StreamDerivativesInstrumentMetricsServiceV1Client {
+	return &streamDerivativesInstrumentMetricsServiceV1Client{cc}
 }
 
-func (c *streamDerivativesInstrumentMetricsV1Client) Subscribe(ctx context.Context, in *derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, opts ...grpc.CallOption) (StreamDerivativesInstrumentMetricsV1_SubscribeClient, error) {
-	stream, err := c.cc.NewStream(ctx, &StreamDerivativesInstrumentMetricsV1_ServiceDesc.Streams[0], StreamDerivativesInstrumentMetricsV1_Subscribe_FullMethodName, opts...)
+func (c *streamDerivativesInstrumentMetricsServiceV1Client) Subscribe(ctx context.Context, in *derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, opts ...grpc.CallOption) (StreamDerivativesInstrumentMetricsServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamDerivativesInstrumentMetricsServiceV1_ServiceDesc.Streams[0], StreamDerivativesInstrumentMetricsServiceV1_Subscribe_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &streamDerivativesInstrumentMetricsV1SubscribeClient{stream}
+	x := &streamDerivativesInstrumentMetricsServiceV1SubscribeClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -1387,16 +1387,16 @@ func (c *streamDerivativesInstrumentMetricsV1Client) Subscribe(ctx context.Conte
 	return x, nil
 }
 
-type StreamDerivativesInstrumentMetricsV1_SubscribeClient interface {
+type StreamDerivativesInstrumentMetricsServiceV1_SubscribeClient interface {
 	Recv() (*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1, error)
 	grpc.ClientStream
 }
 
-type streamDerivativesInstrumentMetricsV1SubscribeClient struct {
+type streamDerivativesInstrumentMetricsServiceV1SubscribeClient struct {
 	grpc.ClientStream
 }
 
-func (x *streamDerivativesInstrumentMetricsV1SubscribeClient) Recv() (*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1, error) {
+func (x *streamDerivativesInstrumentMetricsServiceV1SubscribeClient) Recv() (*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1, error) {
 	m := new(derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -1404,68 +1404,68 @@ func (x *streamDerivativesInstrumentMetricsV1SubscribeClient) Recv() (*derivativ
 	return m, nil
 }
 
-// StreamDerivativesInstrumentMetricsV1Server is the server API for StreamDerivativesInstrumentMetricsV1 service.
-// All implementations must embed UnimplementedStreamDerivativesInstrumentMetricsV1Server
+// StreamDerivativesInstrumentMetricsServiceV1Server is the server API for StreamDerivativesInstrumentMetricsServiceV1 service.
+// All implementations must embed UnimplementedStreamDerivativesInstrumentMetricsServiceV1Server
 // for forward compatibility
-type StreamDerivativesInstrumentMetricsV1Server interface {
+type StreamDerivativesInstrumentMetricsServiceV1Server interface {
 	// Subscribe
-	Subscribe(*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, StreamDerivativesInstrumentMetricsV1_SubscribeServer) error
-	mustEmbedUnimplementedStreamDerivativesInstrumentMetricsV1Server()
+	Subscribe(*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, StreamDerivativesInstrumentMetricsServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamDerivativesInstrumentMetricsServiceV1Server()
 }
 
-// UnimplementedStreamDerivativesInstrumentMetricsV1Server must be embedded to have forward compatible implementations.
-type UnimplementedStreamDerivativesInstrumentMetricsV1Server struct {
+// UnimplementedStreamDerivativesInstrumentMetricsServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamDerivativesInstrumentMetricsServiceV1Server struct {
 }
 
-func (UnimplementedStreamDerivativesInstrumentMetricsV1Server) Subscribe(*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, StreamDerivativesInstrumentMetricsV1_SubscribeServer) error {
+func (UnimplementedStreamDerivativesInstrumentMetricsServiceV1Server) Subscribe(*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1, StreamDerivativesInstrumentMetricsServiceV1_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
-func (UnimplementedStreamDerivativesInstrumentMetricsV1Server) mustEmbedUnimplementedStreamDerivativesInstrumentMetricsV1Server() {
+func (UnimplementedStreamDerivativesInstrumentMetricsServiceV1Server) mustEmbedUnimplementedStreamDerivativesInstrumentMetricsServiceV1Server() {
 }
 
-// UnsafeStreamDerivativesInstrumentMetricsV1Server may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to StreamDerivativesInstrumentMetricsV1Server will
+// UnsafeStreamDerivativesInstrumentMetricsServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamDerivativesInstrumentMetricsServiceV1Server will
 // result in compilation errors.
-type UnsafeStreamDerivativesInstrumentMetricsV1Server interface {
-	mustEmbedUnimplementedStreamDerivativesInstrumentMetricsV1Server()
+type UnsafeStreamDerivativesInstrumentMetricsServiceV1Server interface {
+	mustEmbedUnimplementedStreamDerivativesInstrumentMetricsServiceV1Server()
 }
 
-func RegisterStreamDerivativesInstrumentMetricsV1Server(s grpc.ServiceRegistrar, srv StreamDerivativesInstrumentMetricsV1Server) {
-	s.RegisterService(&StreamDerivativesInstrumentMetricsV1_ServiceDesc, srv)
+func RegisterStreamDerivativesInstrumentMetricsServiceV1Server(s grpc.ServiceRegistrar, srv StreamDerivativesInstrumentMetricsServiceV1Server) {
+	s.RegisterService(&StreamDerivativesInstrumentMetricsServiceV1_ServiceDesc, srv)
 }
 
-func _StreamDerivativesInstrumentMetricsV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _StreamDerivativesInstrumentMetricsServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsRequestV1)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(StreamDerivativesInstrumentMetricsV1Server).Subscribe(m, &streamDerivativesInstrumentMetricsV1SubscribeServer{stream})
+	return srv.(StreamDerivativesInstrumentMetricsServiceV1Server).Subscribe(m, &streamDerivativesInstrumentMetricsServiceV1SubscribeServer{stream})
 }
 
-type StreamDerivativesInstrumentMetricsV1_SubscribeServer interface {
+type StreamDerivativesInstrumentMetricsServiceV1_SubscribeServer interface {
 	Send(*derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1) error
 	grpc.ServerStream
 }
 
-type streamDerivativesInstrumentMetricsV1SubscribeServer struct {
+type streamDerivativesInstrumentMetricsServiceV1SubscribeServer struct {
 	grpc.ServerStream
 }
 
-func (x *streamDerivativesInstrumentMetricsV1SubscribeServer) Send(m *derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1) error {
+func (x *streamDerivativesInstrumentMetricsServiceV1SubscribeServer) Send(m *derivatives_instrument_metrics_v1.StreamDerivativesInstrumentMetricsResponseV1) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-// StreamDerivativesInstrumentMetricsV1_ServiceDesc is the grpc.ServiceDesc for StreamDerivativesInstrumentMetricsV1 service.
+// StreamDerivativesInstrumentMetricsServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamDerivativesInstrumentMetricsServiceV1 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var StreamDerivativesInstrumentMetricsV1_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "kaikosdk.StreamDerivativesInstrumentMetricsV1",
-	HandlerType: (*StreamDerivativesInstrumentMetricsV1Server)(nil),
+var StreamDerivativesInstrumentMetricsServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamDerivativesInstrumentMetricsServiceV1",
+	HandlerType: (*StreamDerivativesInstrumentMetricsServiceV1Server)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Subscribe",
-			Handler:       _StreamDerivativesInstrumentMetricsV1_Subscribe_Handler,
+			Handler:       _StreamDerivativesInstrumentMetricsServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
