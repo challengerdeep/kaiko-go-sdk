@@ -15,6 +15,7 @@ import (
 	aggregates_spot_exchange_rate_v2 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v2"
 	aggregates_vwap_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_vwap_v1"
 	derivatives_instrument_metrics_v1 "github.com/kaikodata/kaiko-go-sdk/stream/derivatives_instrument_metrics_v1"
+	exotic_indices_v1 "github.com/kaikodata/kaiko-go-sdk/stream/exotic_indices_v1"
 	index_forex_rate_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_forex_rate_v1"
 	index_multi_assets_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_multi_assets_v1"
 	index_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_v1"
@@ -1586,6 +1587,126 @@ var StreamIvSviParametersServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamIvSviParametersServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
+	StreamExoticIndicesServiceV1_Subscribe_FullMethodName = "/kaikosdk.StreamExoticIndicesServiceV1/Subscribe"
+)
+
+// StreamExoticIndicesServiceV1Client is the client API for StreamExoticIndicesServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamExoticIndicesServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *exotic_indices_v1.StreamExoticIndicesServiceRequestV1, opts ...grpc.CallOption) (StreamExoticIndicesServiceV1_SubscribeClient, error)
+}
+
+type streamExoticIndicesServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamExoticIndicesServiceV1Client(cc grpc.ClientConnInterface) StreamExoticIndicesServiceV1Client {
+	return &streamExoticIndicesServiceV1Client{cc}
+}
+
+func (c *streamExoticIndicesServiceV1Client) Subscribe(ctx context.Context, in *exotic_indices_v1.StreamExoticIndicesServiceRequestV1, opts ...grpc.CallOption) (StreamExoticIndicesServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamExoticIndicesServiceV1_ServiceDesc.Streams[0], StreamExoticIndicesServiceV1_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamExoticIndicesServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamExoticIndicesServiceV1_SubscribeClient interface {
+	Recv() (*exotic_indices_v1.StreamExoticIndicesServiceResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamExoticIndicesServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamExoticIndicesServiceV1SubscribeClient) Recv() (*exotic_indices_v1.StreamExoticIndicesServiceResponseV1, error) {
+	m := new(exotic_indices_v1.StreamExoticIndicesServiceResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamExoticIndicesServiceV1Server is the server API for StreamExoticIndicesServiceV1 service.
+// All implementations must embed UnimplementedStreamExoticIndicesServiceV1Server
+// for forward compatibility
+type StreamExoticIndicesServiceV1Server interface {
+	// Subscribe
+	Subscribe(*exotic_indices_v1.StreamExoticIndicesServiceRequestV1, StreamExoticIndicesServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamExoticIndicesServiceV1Server()
+}
+
+// UnimplementedStreamExoticIndicesServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamExoticIndicesServiceV1Server struct {
+}
+
+func (UnimplementedStreamExoticIndicesServiceV1Server) Subscribe(*exotic_indices_v1.StreamExoticIndicesServiceRequestV1, StreamExoticIndicesServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamExoticIndicesServiceV1Server) mustEmbedUnimplementedStreamExoticIndicesServiceV1Server() {
+}
+
+// UnsafeStreamExoticIndicesServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamExoticIndicesServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamExoticIndicesServiceV1Server interface {
+	mustEmbedUnimplementedStreamExoticIndicesServiceV1Server()
+}
+
+func RegisterStreamExoticIndicesServiceV1Server(s grpc.ServiceRegistrar, srv StreamExoticIndicesServiceV1Server) {
+	s.RegisterService(&StreamExoticIndicesServiceV1_ServiceDesc, srv)
+}
+
+func _StreamExoticIndicesServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(exotic_indices_v1.StreamExoticIndicesServiceRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamExoticIndicesServiceV1Server).Subscribe(m, &streamExoticIndicesServiceV1SubscribeServer{stream})
+}
+
+type StreamExoticIndicesServiceV1_SubscribeServer interface {
+	Send(*exotic_indices_v1.StreamExoticIndicesServiceResponseV1) error
+	grpc.ServerStream
+}
+
+type streamExoticIndicesServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamExoticIndicesServiceV1SubscribeServer) Send(m *exotic_indices_v1.StreamExoticIndicesServiceResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamExoticIndicesServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamExoticIndicesServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamExoticIndicesServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamExoticIndicesServiceV1",
+	HandlerType: (*StreamExoticIndicesServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamExoticIndicesServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
