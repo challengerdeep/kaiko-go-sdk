@@ -10,6 +10,7 @@ import (
 	context "context"
 	aggregated_price_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregated_price_v1"
 	aggregated_quote_v2 "github.com/kaikodata/kaiko-go-sdk/stream/aggregated_quote_v2"
+	aggregated_state_price_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregated_state_price_v1"
 	aggregates_direct_exchange_rate_v2 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_direct_exchange_rate_v2"
 	aggregates_ohlcv_v1 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_ohlcv_v1"
 	aggregates_spot_exchange_rate_v2 "github.com/kaikodata/kaiko-go-sdk/stream/aggregates_spot_exchange_rate_v2"
@@ -1707,6 +1708,126 @@ var StreamExoticIndicesServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamExoticIndicesServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
+	StreamAggregatedStatePriceServiceV1_Subscribe_FullMethodName = "/kaikosdk.StreamAggregatedStatePriceServiceV1/Subscribe"
+)
+
+// StreamAggregatedStatePriceServiceV1Client is the client API for StreamAggregatedStatePriceServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamAggregatedStatePriceServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *aggregated_state_price_v1.StreamAggregatedStatePriceRequestV1, opts ...grpc.CallOption) (StreamAggregatedStatePriceServiceV1_SubscribeClient, error)
+}
+
+type streamAggregatedStatePriceServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamAggregatedStatePriceServiceV1Client(cc grpc.ClientConnInterface) StreamAggregatedStatePriceServiceV1Client {
+	return &streamAggregatedStatePriceServiceV1Client{cc}
+}
+
+func (c *streamAggregatedStatePriceServiceV1Client) Subscribe(ctx context.Context, in *aggregated_state_price_v1.StreamAggregatedStatePriceRequestV1, opts ...grpc.CallOption) (StreamAggregatedStatePriceServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamAggregatedStatePriceServiceV1_ServiceDesc.Streams[0], StreamAggregatedStatePriceServiceV1_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamAggregatedStatePriceServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamAggregatedStatePriceServiceV1_SubscribeClient interface {
+	Recv() (*aggregated_state_price_v1.StreamAggregatedStatePriceResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamAggregatedStatePriceServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamAggregatedStatePriceServiceV1SubscribeClient) Recv() (*aggregated_state_price_v1.StreamAggregatedStatePriceResponseV1, error) {
+	m := new(aggregated_state_price_v1.StreamAggregatedStatePriceResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamAggregatedStatePriceServiceV1Server is the server API for StreamAggregatedStatePriceServiceV1 service.
+// All implementations must embed UnimplementedStreamAggregatedStatePriceServiceV1Server
+// for forward compatibility
+type StreamAggregatedStatePriceServiceV1Server interface {
+	// Subscribe
+	Subscribe(*aggregated_state_price_v1.StreamAggregatedStatePriceRequestV1, StreamAggregatedStatePriceServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamAggregatedStatePriceServiceV1Server()
+}
+
+// UnimplementedStreamAggregatedStatePriceServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamAggregatedStatePriceServiceV1Server struct {
+}
+
+func (UnimplementedStreamAggregatedStatePriceServiceV1Server) Subscribe(*aggregated_state_price_v1.StreamAggregatedStatePriceRequestV1, StreamAggregatedStatePriceServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamAggregatedStatePriceServiceV1Server) mustEmbedUnimplementedStreamAggregatedStatePriceServiceV1Server() {
+}
+
+// UnsafeStreamAggregatedStatePriceServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamAggregatedStatePriceServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamAggregatedStatePriceServiceV1Server interface {
+	mustEmbedUnimplementedStreamAggregatedStatePriceServiceV1Server()
+}
+
+func RegisterStreamAggregatedStatePriceServiceV1Server(s grpc.ServiceRegistrar, srv StreamAggregatedStatePriceServiceV1Server) {
+	s.RegisterService(&StreamAggregatedStatePriceServiceV1_ServiceDesc, srv)
+}
+
+func _StreamAggregatedStatePriceServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(aggregated_state_price_v1.StreamAggregatedStatePriceRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamAggregatedStatePriceServiceV1Server).Subscribe(m, &streamAggregatedStatePriceServiceV1SubscribeServer{stream})
+}
+
+type StreamAggregatedStatePriceServiceV1_SubscribeServer interface {
+	Send(*aggregated_state_price_v1.StreamAggregatedStatePriceResponseV1) error
+	grpc.ServerStream
+}
+
+type streamAggregatedStatePriceServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamAggregatedStatePriceServiceV1SubscribeServer) Send(m *aggregated_state_price_v1.StreamAggregatedStatePriceResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamAggregatedStatePriceServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamAggregatedStatePriceServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamAggregatedStatePriceServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamAggregatedStatePriceServiceV1",
+	HandlerType: (*StreamAggregatedStatePriceServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamAggregatedStatePriceServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
