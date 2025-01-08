@@ -22,6 +22,7 @@ import (
 	index_v1 "github.com/kaikodata/kaiko-go-sdk/stream/index_v1"
 	iv_svi_parameters_v1 "github.com/kaikodata/kaiko-go-sdk/stream/iv_svi_parameters_v1"
 	market_update_v1 "github.com/kaikodata/kaiko-go-sdk/stream/market_update_v1"
+	orderbookl2_v1 "github.com/kaikodata/kaiko-go-sdk/stream/orderbookl2_v1"
 	trades_v1 "github.com/kaikodata/kaiko-go-sdk/stream/trades_v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -1715,6 +1716,126 @@ var StreamExoticIndicesServiceV1_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	StreamOrderbookL2ServiceV1_Subscribe_FullMethodName = "/kaikosdk.StreamOrderbookL2ServiceV1/Subscribe"
+)
+
+// StreamOrderbookL2ServiceV1Client is the client API for StreamOrderbookL2ServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamOrderbookL2ServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *orderbookl2_v1.StreamOrderBookL2RequestV1, opts ...grpc.CallOption) (StreamOrderbookL2ServiceV1_SubscribeClient, error)
+}
+
+type streamOrderbookL2ServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamOrderbookL2ServiceV1Client(cc grpc.ClientConnInterface) StreamOrderbookL2ServiceV1Client {
+	return &streamOrderbookL2ServiceV1Client{cc}
+}
+
+func (c *streamOrderbookL2ServiceV1Client) Subscribe(ctx context.Context, in *orderbookl2_v1.StreamOrderBookL2RequestV1, opts ...grpc.CallOption) (StreamOrderbookL2ServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamOrderbookL2ServiceV1_ServiceDesc.Streams[0], StreamOrderbookL2ServiceV1_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamOrderbookL2ServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamOrderbookL2ServiceV1_SubscribeClient interface {
+	Recv() (*orderbookl2_v1.StreamOrderBookL2ResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamOrderbookL2ServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamOrderbookL2ServiceV1SubscribeClient) Recv() (*orderbookl2_v1.StreamOrderBookL2ResponseV1, error) {
+	m := new(orderbookl2_v1.StreamOrderBookL2ResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamOrderbookL2ServiceV1Server is the server API for StreamOrderbookL2ServiceV1 service.
+// All implementations must embed UnimplementedStreamOrderbookL2ServiceV1Server
+// for forward compatibility
+type StreamOrderbookL2ServiceV1Server interface {
+	// Subscribe
+	Subscribe(*orderbookl2_v1.StreamOrderBookL2RequestV1, StreamOrderbookL2ServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamOrderbookL2ServiceV1Server()
+}
+
+// UnimplementedStreamOrderbookL2ServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamOrderbookL2ServiceV1Server struct {
+}
+
+func (UnimplementedStreamOrderbookL2ServiceV1Server) Subscribe(*orderbookl2_v1.StreamOrderBookL2RequestV1, StreamOrderbookL2ServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamOrderbookL2ServiceV1Server) mustEmbedUnimplementedStreamOrderbookL2ServiceV1Server() {
+}
+
+// UnsafeStreamOrderbookL2ServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamOrderbookL2ServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamOrderbookL2ServiceV1Server interface {
+	mustEmbedUnimplementedStreamOrderbookL2ServiceV1Server()
+}
+
+func RegisterStreamOrderbookL2ServiceV1Server(s grpc.ServiceRegistrar, srv StreamOrderbookL2ServiceV1Server) {
+	s.RegisterService(&StreamOrderbookL2ServiceV1_ServiceDesc, srv)
+}
+
+func _StreamOrderbookL2ServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(orderbookl2_v1.StreamOrderBookL2RequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamOrderbookL2ServiceV1Server).Subscribe(m, &streamOrderbookL2ServiceV1SubscribeServer{stream})
+}
+
+type StreamOrderbookL2ServiceV1_SubscribeServer interface {
+	Send(*orderbookl2_v1.StreamOrderBookL2ResponseV1) error
+	grpc.ServerStream
+}
+
+type streamOrderbookL2ServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamOrderbookL2ServiceV1SubscribeServer) Send(m *orderbookl2_v1.StreamOrderBookL2ResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamOrderbookL2ServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamOrderbookL2ServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamOrderbookL2ServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamOrderbookL2ServiceV1",
+	HandlerType: (*StreamOrderbookL2ServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamOrderbookL2ServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
 	StreamAggregatedStatePriceServiceV1_Subscribe_FullMethodName = "/kaikosdk.StreamAggregatedStatePriceServiceV1/Subscribe"
 )
 
@@ -1828,6 +1949,126 @@ var StreamAggregatedStatePriceServiceV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Subscribe",
 			Handler:       _StreamAggregatedStatePriceServiceV1_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "sdk/sdk.proto",
+}
+
+const (
+	StreamOrderbookL2ReplayServiceV1_Subscribe_FullMethodName = "/kaikosdk.StreamOrderbookL2ReplayServiceV1/Subscribe"
+)
+
+// StreamOrderbookL2ReplayServiceV1Client is the client API for StreamOrderbookL2ReplayServiceV1 service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StreamOrderbookL2ReplayServiceV1Client interface {
+	// Subscribe
+	Subscribe(ctx context.Context, in *orderbookl2_v1.StreamOrderBookL2ReplayRequestV1, opts ...grpc.CallOption) (StreamOrderbookL2ReplayServiceV1_SubscribeClient, error)
+}
+
+type streamOrderbookL2ReplayServiceV1Client struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStreamOrderbookL2ReplayServiceV1Client(cc grpc.ClientConnInterface) StreamOrderbookL2ReplayServiceV1Client {
+	return &streamOrderbookL2ReplayServiceV1Client{cc}
+}
+
+func (c *streamOrderbookL2ReplayServiceV1Client) Subscribe(ctx context.Context, in *orderbookl2_v1.StreamOrderBookL2ReplayRequestV1, opts ...grpc.CallOption) (StreamOrderbookL2ReplayServiceV1_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamOrderbookL2ReplayServiceV1_ServiceDesc.Streams[0], StreamOrderbookL2ReplayServiceV1_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamOrderbookL2ReplayServiceV1SubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamOrderbookL2ReplayServiceV1_SubscribeClient interface {
+	Recv() (*orderbookl2_v1.StreamOrderBookL2ResponseV1, error)
+	grpc.ClientStream
+}
+
+type streamOrderbookL2ReplayServiceV1SubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamOrderbookL2ReplayServiceV1SubscribeClient) Recv() (*orderbookl2_v1.StreamOrderBookL2ResponseV1, error) {
+	m := new(orderbookl2_v1.StreamOrderBookL2ResponseV1)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// StreamOrderbookL2ReplayServiceV1Server is the server API for StreamOrderbookL2ReplayServiceV1 service.
+// All implementations must embed UnimplementedStreamOrderbookL2ReplayServiceV1Server
+// for forward compatibility
+type StreamOrderbookL2ReplayServiceV1Server interface {
+	// Subscribe
+	Subscribe(*orderbookl2_v1.StreamOrderBookL2ReplayRequestV1, StreamOrderbookL2ReplayServiceV1_SubscribeServer) error
+	mustEmbedUnimplementedStreamOrderbookL2ReplayServiceV1Server()
+}
+
+// UnimplementedStreamOrderbookL2ReplayServiceV1Server must be embedded to have forward compatible implementations.
+type UnimplementedStreamOrderbookL2ReplayServiceV1Server struct {
+}
+
+func (UnimplementedStreamOrderbookL2ReplayServiceV1Server) Subscribe(*orderbookl2_v1.StreamOrderBookL2ReplayRequestV1, StreamOrderbookL2ReplayServiceV1_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (UnimplementedStreamOrderbookL2ReplayServiceV1Server) mustEmbedUnimplementedStreamOrderbookL2ReplayServiceV1Server() {
+}
+
+// UnsafeStreamOrderbookL2ReplayServiceV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamOrderbookL2ReplayServiceV1Server will
+// result in compilation errors.
+type UnsafeStreamOrderbookL2ReplayServiceV1Server interface {
+	mustEmbedUnimplementedStreamOrderbookL2ReplayServiceV1Server()
+}
+
+func RegisterStreamOrderbookL2ReplayServiceV1Server(s grpc.ServiceRegistrar, srv StreamOrderbookL2ReplayServiceV1Server) {
+	s.RegisterService(&StreamOrderbookL2ReplayServiceV1_ServiceDesc, srv)
+}
+
+func _StreamOrderbookL2ReplayServiceV1_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(orderbookl2_v1.StreamOrderBookL2ReplayRequestV1)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamOrderbookL2ReplayServiceV1Server).Subscribe(m, &streamOrderbookL2ReplayServiceV1SubscribeServer{stream})
+}
+
+type StreamOrderbookL2ReplayServiceV1_SubscribeServer interface {
+	Send(*orderbookl2_v1.StreamOrderBookL2ResponseV1) error
+	grpc.ServerStream
+}
+
+type streamOrderbookL2ReplayServiceV1SubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamOrderbookL2ReplayServiceV1SubscribeServer) Send(m *orderbookl2_v1.StreamOrderBookL2ResponseV1) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// StreamOrderbookL2ReplayServiceV1_ServiceDesc is the grpc.ServiceDesc for StreamOrderbookL2ReplayServiceV1 service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StreamOrderbookL2ReplayServiceV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kaikosdk.StreamOrderbookL2ReplayServiceV1",
+	HandlerType: (*StreamOrderbookL2ReplayServiceV1Server)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _StreamOrderbookL2ReplayServiceV1_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},
